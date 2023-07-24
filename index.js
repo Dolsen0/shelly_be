@@ -1,12 +1,17 @@
-const express = require('express')
-const app = express()
+const axios = require('axios');
+const express = require('express');
+const app = express();
+const port = 3000;
 
-app.get('/', (req, res) => {
-  res.send('hello world')
-})
+app.get('/home', async (req, res) => {
+  try {
+    const response = await axios.get('http://192.168.33.1/rpc/Shelly.GetStatus');
+    res.send(response.data);
+  } catch (error) {
+    res.status(500).send({ error: 'Error fetching status' });
+  }
+});
 
-
-app.listen(3000, () => {
-    console.log('server is running')
-    }
-)
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
