@@ -15,6 +15,16 @@ app.get('/home', async (req, res) => {
   }
 });
 
+app.get('/home/restart', async(req, res) => {
+  try{
+    const response = await axios.get('http://192.168.33.1/rpc/Switch.Toggle?id=0');
+    res.json(response.data);
+  } catch(error) {
+    res.status(500).send({error: 'Error fetching status'});
+  }
+})
+
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
