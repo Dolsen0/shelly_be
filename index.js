@@ -25,6 +25,21 @@ app.get('/home/restart', async(req, res) => {
 })
 
 
+app.get('/home/light', async(req, res) => {
+  try{
+    const response = await axios.get('http://192.168.15.100/light/0?brightness=50')
+    res.json(response.data);
+  } catch(error) {
+    res.status(500).send({error: 'Error'})
+}
+})
+
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
+
+
+// http://192.168.15.100/light/0?brightness=80
+// 
