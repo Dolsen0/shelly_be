@@ -29,7 +29,9 @@ app.get("/", async (req, res) => {
 app.get("/home", async (req, res) => {
   try {
     const response = await axios.get(
-      "http://192.168.15.196/rpc/Shelly.GetStatus"
+      "http://192.168.0.2/rpc/Shelly.GetStatus"
+      // 192.168.0.2
+      // 192.168.15.196
     );
     res.json(response.data);
   } catch (error) {
@@ -40,13 +42,18 @@ app.get("/home", async (req, res) => {
 app.get("/home/restart", async (req, res) => {
   try {
     const response = await axios.get(
-      "http://192.168.33.1/rpc/Switch.Toggle?id=0"
+      "http://192.168.0.2/rpc/Switch.Toggle?id=0"
     );
-    res.json(response.data);
+      await client.connect();
+      const db = client.db("shelly");
+      const collection = db.collection("device");
+      const data = await collection.find().toArray();
+      res.json(data);
   } catch (error) {
     res.status(500).json({ error: "Error fetching status" });
   }
 });
+
 
 app.get("/home/light", async (req, res) => {
   try {
