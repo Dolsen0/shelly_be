@@ -1,25 +1,14 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const password = require('./password.json');
+import { MongoClient } from 'mongodb'
+import dotenv from 'dotenv'
+import password from './password.json' assert { type: 'json' };
+
+dotenv.config()
+
 const uri = `mongodb+srv://derekolsen:${password.password}@cluster0.vs0nwmu.mongodb.net/?retryWrites=true&w=majority`;
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
+const client = new MongoClient(uri);
+client.connect();
 
-async function run() {
-  try {
-    await client.connect();
-    await client.db("shelly").command({ ping: 1 });
-    return client.db("shelly");
-  } finally {
-    await client.close();
-  }
-}
+const db = client.db('shelly');
 
-run().catch(console.dir);
-
-module.exports = client;
+export default db;
