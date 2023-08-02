@@ -12,8 +12,9 @@ const app = express();
 const port = 3000;
 
 const office = process.env.IP_OFFICE;
+const office0 = process.env.IP_OFFICE0;
 const home = process.env.IP_HOME;
-const ip = [office, home];
+const ip = [office, home, office0];
 
 const fixedId = new ObjectId("60e2b171044f1a2768a740b0");
 
