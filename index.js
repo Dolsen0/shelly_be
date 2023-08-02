@@ -6,16 +6,22 @@ import dotenv from "dotenv";
 import cron from "node-cron";
 import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 
+dotenv.config();
+
 const app = express();
 const port = 3000;
 
-dotenv.config();
-app.use(cors());
+const office = process.env.IP_OFFICE;
+const home = process.env.IP_HOME;
+const ip = [office, home];
 
 const fixedId = new ObjectId("60e2b171044f1a2768a740b0");
 
+app.use(cors());
+
+
 async function updateDeviceState() {
-  const response = await axios.get("http://192.168.0.2/rpc/Shelly.GetStatus");
+  const response = await axios.get(`http://${office}/rpc/Shelly.GetStatus`);
   await client.connect();
   const db = client.db("shelly");
   const collection = db.collection("device");
@@ -56,9 +62,9 @@ app.get("/", async (req, res) => {
 app.get("/home", async (req, res) => {
   try {
     const response = await axios.get(
-      "http://192.168.0.2/rpc/Shelly.GetStatus"
-      // 192.168.0.2
-      // 192.168.15.196
+      `http://${office}/rpc/Shelly.GetStatus`
+      // 192.168.0.2              home
+      // 192.168.15.196           office
     );
     res.json(response.data);
   } catch (error) {
@@ -69,7 +75,7 @@ app.get("/home", async (req, res) => {
 app.post("/home/restart", async (req, res) => {
   try {
     const response = await axios.get(
-      "http://192.168.0.2/rpc/Switch.Toggle?id=0"
+      "http://192.168.15.196/rpc/Switch.Toggle?id=0"
     );
     await client.connect();
     const db = client.db("shelly");
