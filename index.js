@@ -111,6 +111,15 @@ app.get("/home/light", async (req, res) => {
   }
 });
 
+app.get("/home/config", (req, res) => {
+  try {
+    const response = axios.get(`http://192.168.33.1/rpc/WiFi.SetConfig?config={"sta":{"ssid":"Shelly","pass":"Shelly","enable":true}}`);
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: "Error" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
