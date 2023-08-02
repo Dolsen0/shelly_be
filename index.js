@@ -66,7 +66,7 @@ app.get("/home", async (req, res) => {
   }
 });
 
-app.get("/home/restart", async (req, res) => {
+app.post("/home/restart", async (req, res) => {
   try {
     const response = await axios.get(
       "http://192.168.0.2/rpc/Switch.Toggle?id=0"
