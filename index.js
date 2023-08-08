@@ -15,6 +15,7 @@ const office = process.env.IP_OFFICE;
 const office0 = process.env.IP_OFFICE0;
 const home = process.env.IP_HOME;
 const home0 = process.env.IP_HOME_0;
+const MAC_ID = process.env.MAC_ID;
 const ip = [office, home, office0, home0];
 
 const fixedId = new ObjectId("60e2b171044f1a2768a740b0");
@@ -124,8 +125,10 @@ app.get("/home/light", async (req, res) => {
   }
 });
 
-
-
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
+
+
+console.log(`shellydevicemodel-${MAC_ID}`)
