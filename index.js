@@ -20,6 +20,20 @@ const ip = [office, home, office0, home0];
 const fixedId = new ObjectId("60e2b171044f1a2768a740b0");
 
 app.use(cors());
+app.use(express.json());
+
+app.post("/home/config", async (req, res) => {
+  try {
+    const { ssid, pass } = req.body;
+    const response = await axios.get(
+      `http://192.168.33.1/rpc/WiFi.SetConfig?config={"sta":{"ssid":"${ssid}","pass":"${pass}","enable":true}}`
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).json({ error: "Error" });
+  }
+});
 
 async function updateDeviceState() {
   const response = await axios.get(`http://${home0}/rpc/Shelly.GetStatus`);
@@ -75,9 +89,7 @@ app.get("/home", async (req, res) => {
 
 app.post("/home/restart", async (req, res) => {
   try {
-    const response = await axios.get(
-      `http://${home0}/rpc/Switch.Toggle?id=0`
-    );
+    const response = await axios.get(`http://${home0}/rpc/Switch.Toggle?id=0`);
     await client.connect();
     const db = client.db("shelly");
     const collection = db.collection("device");
@@ -112,14 +124,7 @@ app.get("/home/light", async (req, res) => {
   }
 });
 
-app.get("/home/config", (req, res) => {
-  try {
-    const response = axios.get(`http://192.168.33.1/rpc/WiFi.SetConfig?config={"sta":{"ssid":"Shelly","pass":"Shelly","enable":true}}`);
-    res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ error: "Error" });
-  }
-});
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
