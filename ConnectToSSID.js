@@ -20,4 +20,4 @@ function connectToSSID (SSID) {
 connectToSSID(`ShellyPlugUS-083AF201BDB8`)
 
 
-// ➜  smallProjects networksetup -setairportnetwork en0 ShellyPlugUS-083AF201BDB8 
+// networksetup -setairportnetwork en0 ShellyPlugUS-083AF201BDB8 

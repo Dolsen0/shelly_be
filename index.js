@@ -14,15 +14,15 @@ const port = 3000;
 const office = process.env.IP_OFFICE;
 const office0 = process.env.IP_OFFICE0;
 const home = process.env.IP_HOME;
-const ip = [office, home, office0];
+const home0 = process.env.IP_HOME_0;
+const ip = [office, home, office0, home0];
 
 const fixedId = new ObjectId("60e2b171044f1a2768a740b0");
 
 app.use(cors());
 
-
 async function updateDeviceState() {
-  const response = await axios.get(`http://${office}/rpc/Shelly.GetStatus`);
+  const response = await axios.get(`http://${home0}/rpc/Shelly.GetStatus`);
   await client.connect();
   const db = client.db("shelly");
   const collection = db.collection("device");
@@ -63,7 +63,7 @@ app.get("/", async (req, res) => {
 app.get("/home", async (req, res) => {
   try {
     const response = await axios.get(
-      `http://${office}/rpc/Shelly.GetStatus`
+      `http://${home0}/rpc/Shelly.GetStatus`
       // 192.168.0.2              home
       // 192.168.15.196           office
     );
@@ -76,7 +76,7 @@ app.get("/home", async (req, res) => {
 app.post("/home/restart", async (req, res) => {
   try {
     const response = await axios.get(
-      "http://192.168.15.196/rpc/Switch.Toggle?id=0"
+      `http://${home0}/rpc/Switch.Toggle?id=0`
     );
     await client.connect();
     const db = client.db("shelly");
