@@ -16,6 +16,7 @@ const office0 = process.env.IP_OFFICE0;
 const home = process.env.IP_HOME;
 const home0 = process.env.IP_HOME_0;
 const MAC_ID = process.env.MAC_ID;
+const MAC_ID_OFFICE = process.env.MAC_ID_OFFICE;
 const ip = [office, home, office0, home0];
 
 const fixedId = new ObjectId("60e2b171044f1a2768a740b0");
@@ -38,7 +39,7 @@ app.post("/home/config", async (req, res) => {
 
 async function updateDeviceState() {
   const response = await axios.get(
-    `http://ShellyPlugUs-${MAC_ID}/rpc/Shelly.GetStatus`
+    `http://ShellyPlugUs-${MAC_ID_OFFICE}/rpc/Shelly.GetStatus`
   );
   await client.connect();
   const db = client.db("shelly");
@@ -80,8 +81,9 @@ app.get("/", async (req, res) => {
 app.get("/home", async (req, res) => {
   try {
     const response = await axios.get(
-      `http://ShellyPlugUs-${MAC_ID}/rpc/Shelly.GetStatus`
+      `http://ShellyPlugUs-${MAC_ID_OFFICE}/rpc/Shelly.GetStatus`
     );
+    console.log(`ShellyPlugUs-${response.data.sys.mac}`);
     res.json(response.data);
   } catch (error) {
     res.status(500).json({ error: "Error fetching status" });
@@ -131,5 +133,6 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-console.log(`shellydevicemodel-${MAC_ID}`);
-console.log(`ShellyPlugUs-${MAC_ID}`);
+// console.log(`shellydevicemodel-${MAC_ID}`);
+// console.log(`ShellyPlugUs-${MAC_ID}`);
+
