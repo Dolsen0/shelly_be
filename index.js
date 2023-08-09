@@ -37,7 +37,9 @@ app.post("/home/config", async (req, res) => {
 });
 
 async function updateDeviceState() {
-  const response = await axios.get(`http://shellydevicemodel-${MAC_ID}/rpc/Shelly.GetStatus`);
+  const response = await axios.get(
+    `http://ShellyPlugUs-${MAC_ID}/rpc/Shelly.GetStatus`
+  );
   await client.connect();
   const db = client.db("shelly");
   const collection = db.collection("device");
@@ -51,7 +53,7 @@ async function updateDeviceState() {
   return updatedDoc;
 }
 
-cron.schedule("*/10 * * * *", async () => {
+cron.schedule("*/3 * * * *", async () => {
   console.log("Updating device state...");
   try {
     await updateDeviceState();
@@ -79,10 +81,7 @@ app.get("/home", async (req, res) => {
   try {
     const response = await axios.get(
       `http://ShellyPlugUs-${MAC_ID}/rpc/Shelly.GetStatus`
-      // 192.168.0.2              home
-      // 192.168.15.196           office
     );
-    // 
     res.json(response.data);
   } catch (error) {
     res.status(500).json({ error: "Error fetching status" });
@@ -91,7 +90,9 @@ app.get("/home", async (req, res) => {
 
 app.post("/home/restart", async (req, res) => {
   try {
-    const response = await axios.get(`http://ShellyPlugUs-${MAC_ID}/rpc/Switch.Toggle?id=0`);
+    const response = await axios.get(
+      `http://ShellyPlugUs-${MAC_ID}/rpc/Switch.Toggle?id=0`
+    );
     await client.connect();
     const db = client.db("shelly");
     const collection = db.collection("device");
@@ -130,7 +131,5 @@ app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
 
-
-
-console.log(`shellydevicemodel-${MAC_ID}`)
-console.log(`ShellyPlugUs-${MAC_ID}`)
+console.log(`shellydevicemodel-${MAC_ID}`);
+console.log(`ShellyPlugUs-${MAC_ID}`);
